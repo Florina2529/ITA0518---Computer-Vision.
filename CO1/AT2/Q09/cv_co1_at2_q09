@@ -1,0 +1,103 @@
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Circle, Polygon
+
+fig, ax = plt.subplots(1,3, figsize=(16,5))
+
+for a in ax:
+    a.set_xlim(0,100)
+    a.set_ylim(0,100)
+    a.set_xticks([])
+    a.set_yticks([])
+    a.set_aspect("equal")
+
+# =====================================================
+# IMAGE 1 : IMAGE ACQUISITION
+# =====================================================
+ax[0].set_facecolor("#BFE6FF")
+
+# Road
+ax[0].add_patch(Polygon([[35,0],[65,0],[90,100],[10,100]],
+                        closed=True,color="gray"))
+
+# Lane
+ax[0].plot([50,50],[0,100],"w--",lw=3)
+
+# Sun
+ax[0].add_patch(Circle((85,90),8,color="gold"))
+
+# Camera
+ax[0].add_patch(Rectangle((42,5),16,10,color="black"))
+ax[0].add_patch(Circle((50,10),3,color="cyan"))
+
+# Car
+ax[0].add_patch(Rectangle((38,0),24,8,color="royalblue"))
+
+# Pedestrian
+ax[0].add_patch(Circle((70,60),3,color="black"))
+ax[0].plot([70,70],[57,47],"k",lw=2)
+ax[0].plot([70,66],[53,50],"k",lw=2)
+ax[0].plot([70,74],[53,50],"k",lw=2)
+ax[0].plot([70,67],[47,40],"k",lw=2)
+ax[0].plot([70,73],[47,40],"k",lw=2)
+
+# =====================================================
+# IMAGE 2 : SEMANTIC SEGMENTATION
+# =====================================================
+ax[1].set_facecolor("#87CEEB")
+
+# Segmented road
+ax[1].add_patch(Polygon([[35,0],[65,0],[90,100],[10,100]],
+                        closed=True,color="#808080"))
+
+# Lane
+ax[1].plot([50,50],[0,100],"w--",lw=3)
+
+# Detected pedestrian
+ax[1].add_patch(Rectangle((66,38),8,26,
+                          fill=False,ec="red",lw=3))
+
+# Road labels
+ax[1].add_patch(Rectangle((38,0),24,8,color="royalblue"))
+
+# =====================================================
+# IMAGE 3 : DEPTH & DECISION
+# =====================================================
+ax[2].set_facecolor("#BFE6FF")
+
+ax[2].add_patch(Polygon([[35,0],[65,0],[90,100],[10,100]],
+                        closed=True,color="gray"))
+
+ax[2].plot([50,50],[0,100],"w--",lw=3)
+
+# Car
+ax[2].add_patch(Rectangle((38,0),24,8,color="royalblue"))
+
+# Pedestrian
+ax[2].add_patch(Circle((70,60),3,color="black"))
+ax[2].plot([70,70],[57,47],"k",lw=2)
+ax[2].plot([70,66],[53,50],"k",lw=2)
+ax[2].plot([70,74],[53,50],"k",lw=2)
+ax[2].plot([70,67],[47,40],"k",lw=2)
+ax[2].plot([70,73],[47,40],"k",lw=2)
+
+# Stereo camera
+ax[2].add_patch(Circle((43,7),2,color="cyan"))
+ax[2].add_patch(Circle((57,7),2,color="cyan"))
+
+# Depth lines
+ax[2].plot([45,70],[8,60],color="orange",lw=2)
+ax[2].plot([55,70],[8,60],color="orange",lw=2)
+
+# Brake sign
+ax[2].add_patch(Circle((18,88),7,color="red"))
+
+plt.tight_layout()
+
+plt.savefig("Self_Driving_Car_Computer_Vision.png",dpi=300)
+
+plt.show()
+
+
+
+
+
