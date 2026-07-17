@@ -1,0 +1,92 @@
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Circle
+import numpy as np
+
+fig, ax = plt.subplots(1,4, figsize=(18,5))
+
+for a in ax:
+    a.set_xlim(0,100)
+    a.set_ylim(0,100)
+    a.set_xticks([])
+    a.set_yticks([])
+    a.set_aspect("equal")
+    a.set_facecolor("white")
+
+# ==========================================
+# 1. Original High-Resolution Image
+# ==========================================
+
+ax[0].add_patch(Rectangle((0,0),100,100,color="#BFE8FF"))
+ax[0].add_patch(Rectangle((0,0),100,28,color="#4CAF50"))
+
+# Road
+ax[0].add_patch(Rectangle((42,0),16,100,color="gray"))
+ax[0].plot([50,50],[0,100],"w--",lw=2)
+
+# Buildings
+colors=["royalblue","orange","purple","red"]
+
+locations=[(12,35),(18,65),(70,25),(68,65)]
+
+for c,(x,y) in zip(colors,locations):
+    ax[0].add_patch(Rectangle((x,y),15,15,color=c))
+
+# Trees
+for x,y in [(30,20),(80,48),(25,90)]:
+    ax[0].add_patch(Circle((x,y),4,color="forestgreen"))
+
+# ==========================================
+# 2. Chroma Subsampling
+# ==========================================
+
+ax[1].add_patch(Rectangle((0,0),100,100,color="#CFEFFF"))
+ax[1].add_patch(Rectangle((0,0),100,28,color="#65B765"))
+
+ax[1].add_patch(Rectangle((42,0),16,100,color="gray"))
+ax[1].plot([50,50],[0,100],"w--",lw=2)
+
+# Colors become softer
+soft=["#7FAAFF","#F8C77F","#B08AD7","#FF8888"]
+
+for c,(x,y) in zip(soft,locations):
+    ax[1].add_patch(Rectangle((x,y),15,15,color=c))
+
+for x,y in [(30,20),(80,48),(25,90)]:
+    ax[1].add_patch(Circle((x,y),4,color="#6DAF6D"))
+
+# ==========================================
+# 3. Vector Quantization
+# ==========================================
+
+ax[2].add_patch(Rectangle((0,0),100,100,color="#BFE8FF"))
+ax[2].add_patch(Rectangle((0,0),100,28,color="#4CAF50"))
+
+ax[2].add_patch(Rectangle((42,0),16,100,color="gray"))
+ax[2].plot([50,50],[0,100],"w--",lw=2)
+
+# Limited color palette
+for x,y in locations:
+    ax[2].add_patch(Rectangle((x,y),15,15,color="royalblue"))
+
+for x,y in [(30,20),(80,48),(25,90)]:
+    ax[2].add_patch(Circle((x,y),4,color="green"))
+
+# ==========================================
+# 4. Optimized Image
+# ==========================================
+
+ax[3].add_patch(Rectangle((5,10),90,80,
+                          facecolor="#D8F0FF",
+                          edgecolor="black"))
+
+ax[3].add_patch(Rectangle((42,10),16,80,color="gray"))
+ax[3].plot([50,50],[10,90],"w--",lw=2)
+
+for x,y in [(18,40),(18,65),(68,30),(68,65)]:
+    ax[3].add_patch(Rectangle((x,y),14,14,color="royalblue"))
+
+for x,y in [(30,22),(80,48)]:
+    ax[3].add_patch(Circle((x,y),4,color="green"))
+
+plt.tight_layout()
+plt.show()
