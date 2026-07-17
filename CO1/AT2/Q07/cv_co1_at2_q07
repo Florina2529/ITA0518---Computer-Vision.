@@ -1,0 +1,86 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Circle
+from PIL import Image, ImageDraw
+import cv2
+
+# -----------------------------
+# Create Original Scene
+# -----------------------------
+img = Image.new("RGB", (500, 350), (210, 230, 255))
+draw = ImageDraw.Draw(img)
+
+# Ground
+draw.rectangle([0,250,500,350], fill=(120,120,120))
+
+# Road
+draw.rectangle([210,0,290,350], fill=(110,110,110))
+draw.line((250,0,250,350), fill="white", width=4)
+
+# Tree
+draw.rectangle([70,120,95,250], fill=(139,69,19))
+draw.ellipse([30,40,135,145], fill=(34,139,34))
+
+# Car
+draw.rectangle([330,180,420,230], fill=(65,105,225))
+draw.ellipse([340,220,360,240], fill="black")
+draw.ellipse([390,220,410,240], fill="black")
+
+# Sun
+draw.ellipse([390,20,460,90], fill="gold")
+
+# -----------------------------
+# Uneven Illumination
+# -----------------------------
+img_np = np.array(img).astype(np.float32)
+
+x = np.linspace(0.35, 1.4, img_np.shape[1])
+illumination = np.tile(x, (img_np.shape[0],1))
+illumination = np.dstack([illumination]*3)
+
+uneven = np.clip(img_np * illumination,0,255).astype(np.uint8)
+
+# -----------------------------
+# CLAHE Enhancement
+# -----------------------------
+lab = cv2.cvtColor(uneven, cv2.COLOR_RGB2LAB)
+
+L,A,B = cv2.split(lab)
+
+clahe = cv2.createCLAHE(
+    clipLimit=2.5,
+    tileGridSize=(8,8)
+)
+
+L2 = clahe.apply(L)
+
+enhanced = cv2.cvtColor(
+    cv2.merge((L2,A,B)),
+    cv2.COLOR_LAB2RGB
+)
+
+# -----------------------------
+# Display
+# -----------------------------
+fig,ax = plt.subplots(1,3,figsize=(15,5))
+
+titles = [
+    "Original Image",
+    "Uneven Lighting\n(Poor Contrast)",
+    "After CLAHE"
+]
+
+images = [
+    img_np.astype(np.uint8),
+    uneven,
+    enhanced
+]
+
+for i in range(3):
+    ax[i].imshow(images[i])
+    ax[i].set_title(titles[i],fontsize=14,fontweight="bold")
+    ax[i].axis("off")
+
+plt.tight_layout()
+plt.show()
+
